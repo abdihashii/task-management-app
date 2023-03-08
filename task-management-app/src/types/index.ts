@@ -28,4 +28,5 @@ export type ColumnProps = {
 
 export type TaskProps = {
   task: Task;
+  index: number;
 };
