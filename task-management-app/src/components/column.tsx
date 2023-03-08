@@ -11,11 +11,14 @@ const Column = ({ column, tasks }: ColumnProps) => {
 
       {/* Task list */}
       <Droppable droppableId={column.id}>
-        {(provided) => (
+        {(provided, snapshot) => (
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="p-2"
+            className={`p-2 transition duration-200 ease-linear ${
+              snapshot.isDraggingOver ? 'bg-blue-400' : 'bg-white'
+            }`}
+            date-is-dragging-over={snapshot.isDraggingOver}
           >
             {tasks.map((task, index) => (
               <Task key={task.id} {...{ task, index }} />
