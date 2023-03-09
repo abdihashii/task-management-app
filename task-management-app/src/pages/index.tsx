@@ -35,6 +35,11 @@ export default function Home() {
   // Synchronously update the state to reflect the drag and drop result
   const onDragEnd = (result: DropResult) => {
     // document.body.style.color = 'inherit'; // reset the color
+    // Clear the index when a drag ends
+    setData({
+      ...data,
+      homeIndex: null,
+    });
 
     const { destination, source, draggableId } = result;
 
@@ -117,6 +122,17 @@ export default function Home() {
     setData(newData);
   };
 
+  // How to enforce a requirement that only lets tasks move to the right
+  const onDragStart = (start: { source: { droppableId: string } }) => {
+    const homeIndex = data.columnOrder.indexOf(start.source.droppableId);
+
+    // Record the index of the column that the task is being dragged from to the state
+    setData({
+      ...data,
+      homeIndex,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -125,7 +141,7 @@ export default function Home() {
       <main className={`${inter.className}`}>
         <DragDropContext
           // called when the drag starts
-          // onDragStart={onDragStart}
+          onDragStart={onDragStart}
           // called when something changes during the drag, such as moving over a new droppable
           // onDragUpdate={onDragUpdate}
           // called at the end of the drag, this is the only required callback
@@ -137,7 +153,16 @@ export default function Home() {
               const column = data.columns[columnId];
               const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
-              return <Column key={column.id} {...{ index, column, tasks }} />;
+              // true when the index of the column is less than the index of the column that the task is being dragged from
+              // this will prevent dragging tasks backgrounds between columns
+              const isDropDisabled = index < data.homeIndex!;
+
+              return (
+                <Column
+                  key={column.id}
+                  {...{ index, column, tasks, isDropDisabled }}
+                />
+              );
             })}
           </section>
         </DragDropContext>

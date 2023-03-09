@@ -19,12 +19,14 @@ export type InitialData = {
   tasks: Tasks;
   columns: Columns;
   columnOrder: ColumnOrder;
+  homeIndex?: number | null;
 };
 
 export type ColumnProps = {
+  index: number;
   column: Column;
   tasks: Task[];
-  index: number;
+  isDropDisabled?: boolean;
 };
 
 export type TaskProps = {
