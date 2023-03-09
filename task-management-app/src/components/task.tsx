@@ -21,7 +21,7 @@ const Task = ({ task, index }: TaskProps) => {
             // Makes the handle the only part of the draggable that is used to control the dragging of the entire draggable
             dragHandleProps={provided.dragHandleProps}
           /> */}
-          {task.content}
+          {task.content} {task.id}
         </div>
       )}
     </Draggable>
