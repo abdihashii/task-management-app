@@ -148,7 +148,9 @@ export default function Home() {
           onDragEnd={onDragEnd}
         >
           {/* Container */}
-          <section className="grid grid-cols-3">
+          <section
+          // className="grid grid-cols-3"
+          >
             {data.columnOrder.map((columnId, index) => {
               const column = data.columns[columnId];
               const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);

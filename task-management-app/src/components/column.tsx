@@ -5,7 +5,7 @@ import { Droppable } from 'react-beautiful-dnd';
 
 const Column = ({ index, column, tasks, isDropDisabled }: ColumnProps) => {
   return (
-    <div className="m-2 flex flex-col rounded-sm border border-gray-300">
+    <div className="m-2 flex w-fit flex-col rounded-sm border border-gray-300">
       {/* Column title */}
       <h1 className="p-2 text-2xl">{column.title}</h1>
 
@@ -14,10 +14,11 @@ const Column = ({ index, column, tasks, isDropDisabled }: ColumnProps) => {
         droppableId={column.id}
         // type={column.id === 'column-3' ? 'DONE' : 'ACTIVE'} // A mechanism to control where a draggable can be dropped, this is one of two and the simpler of the two. This is optional.
         isDropDisabled={isDropDisabled} // A mechanism to control where a draggable can be dropped, this is one of two and the more complex of the two. This is optional.
+        direction="horizontal" // An optional that controls the direction that the draggable can be dropped in. It defaults to vertical.
       >
         {(provided, snapshot) => (
           <div
-            className={`flex-grow p-2 transition duration-200 ease-linear ${
+            className={`flex p-2 transition duration-200 ease-linear ${
               snapshot.isDraggingOver ? 'bg-blue-400' : 'bg-white'
             }`}
             ref={provided.innerRef}

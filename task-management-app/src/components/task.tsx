@@ -14,13 +14,13 @@ const Task = ({ task, index }: TaskProps) => {
     >
       {(provided, snapshot) => (
         <div
-          className={`mb-2 flex rounded-sm border border-gray-300 p-2 ${
+          className={`mr-2 flex h-20 w-20 items-center justify-center rounded-full border-2 border-gray-300 p-2 ${
             isDragDisabled
               ? 'bg-gray-300'
               : snapshot.isDragging
               ? 'bg-orange-400'
               : 'bg-white'
-          }`}
+          } focus:border-red-500 focus:outline-none `}
           {...provided.draggableProps}
           // the part of the draggable that is used to control the dragging of the entire draggable
           {...provided.dragHandleProps}
@@ -32,7 +32,7 @@ const Task = ({ task, index }: TaskProps) => {
             // Makes the handle the only part of the draggable that is used to control the dragging of the entire draggable
             dragHandleProps={provided.dragHandleProps}
           /> */}
-          {task.content} {task.id}
+          {task.content[0]} {task.id[task.id.length - 1]}
         </div>
       )}
     </Draggable>
