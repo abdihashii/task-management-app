@@ -24,6 +24,7 @@ export type InitialData = {
 export type ColumnProps = {
   column: Column;
   tasks: Task[];
+  index: number;
 };
 
 export type TaskProps = {

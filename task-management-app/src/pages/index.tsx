@@ -84,7 +84,7 @@ export default function Home() {
       <Head>
         <title>Task Management App</title>
       </Head>
-      <main className={`${inter.className}`}>
+      <main className={`${inter.className} grid grid-cols-3`}>
         <DragDropContext
           // called when the drag starts
           // onDragStart={onDragStart}
@@ -93,11 +93,11 @@ export default function Home() {
           // called at the end of the drag, this is the only required callback
           onDragEnd={onDragEnd}
         >
-          {data.columnOrder.map((columnId) => {
+          {data.columnOrder.map((columnId, index) => {
             const column = data.columns[columnId];
             const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
 
-            return <Column key={column.id} {...{ column, tasks }} />;
+            return <Column key={column.id} {...{ index, column, tasks }} />;
           })}
         </DragDropContext>
       </main>
