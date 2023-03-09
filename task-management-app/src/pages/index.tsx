@@ -11,8 +11,31 @@ const inter = Inter({ subsets: ['latin'] });
 export default function Home() {
   const [data, setData] = useState(initialData);
 
+  // These two callbacks are not always needed to change styles, and
+  // we should generally rely on the snapshot object to style our components
+
+  // const onDragStart = () => {
+  //   document.body.style.color = 'blue';
+  //   document.body.style.transition = 'background-color 0.2s ease';
+  // };
+
+  // // Makes changes in response to changes during a drag
+  // const onDragUpdate = (update) => {
+  //   const { destination } = update;
+
+  //   // Stores the percentage of the current index based on all of the tasks in our state
+  //   const opacity = destination
+  //     ? destination.index / Object.keys(data.tasks).length
+  //     : 0;
+
+  //   // Then we set the background color of the body to the opacity value
+  //   document.body.style.backgroundColor = `rgba(153, 141, 217, ${opacity})`;
+  // };
+
   // Synchronously update the state to reflect the drag and drop result
   const onDragEnd = (result: DropResult) => {
+    // document.body.style.color = 'inherit'; // reset the color
+
     const { destination, source, draggableId } = result;
 
     // If there's no destination, then there's nothing we need to do
@@ -64,9 +87,9 @@ export default function Home() {
       <main className={`${inter.className}`}>
         <DragDropContext
           // called when the drag starts
-          // onDragStart
+          // onDragStart={onDragStart}
           // called when something changes during the drag, such as moving over a new droppable
-          // onDragUpdate
+          // onDragUpdate={onDragUpdate}
           // called at the end of the drag, this is the only required callback
           onDragEnd={onDragEnd}
         >
@@ -81,3 +104,30 @@ export default function Home() {
     </>
   );
 }
+
+/*
+DragDropContext Props
+
+onDragStart = {
+  draggableId: string,
+  type: string,
+  source: {
+    droppableId: string,
+    index: number
+  }
+}
+
+onDragUpdate = {
+  ...onDragStart,
+  destination: {
+    droppableId: string,
+    index: number
+  }
+}
+
+onDragEnd = {
+  ...onDragUpdate,
+  reason: 'DROP' | 'CANCEL'
+}
+
+*/
