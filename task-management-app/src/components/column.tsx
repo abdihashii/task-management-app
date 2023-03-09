@@ -8,7 +8,7 @@ const Column = ({ index, column, tasks, isDropDisabled }: ColumnProps) => {
     <Draggable draggableId={column.id} index={index}>
       {(provided, snapshot) => (
         <div
-          className={`m-2 flex flex-col rounded-sm border border-gray-300 bg-white
+          className={`m-2 flex flex-col rounded-sm border border-gray-300
             ${snapshot.isDragging ? 'bg-orange-400' : 'bg-inherit'}
           `}
           {...provided.draggableProps}
@@ -16,7 +16,7 @@ const Column = ({ index, column, tasks, isDropDisabled }: ColumnProps) => {
         >
           {/* Column title */}
           <h1
-            className="p-2 text-2xl"
+            className={`p-2 text-2xl transition duration-200 ease-linear hover:bg-orange-400`}
             {...provided.dragHandleProps}
             data-is-dragging={snapshot.isDragging}
           >
