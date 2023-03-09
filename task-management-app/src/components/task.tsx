@@ -4,7 +4,8 @@ import { Draggable } from 'react-beautiful-dnd';
 // import Handle from '@/components/handle';
 
 const Task = ({ task, index }: TaskProps) => {
-  const isDragDisabled = task.id === 'task-1';
+  // const isDragDisabled = task.id === 'task-1';
+  const isDragDisabled = false;
 
   return (
     <Draggable
@@ -14,7 +15,7 @@ const Task = ({ task, index }: TaskProps) => {
     >
       {(provided, snapshot) => (
         <div
-          className={`mr-2 flex h-20 w-20 items-center justify-center rounded-full border-2 border-gray-300 p-2 ${
+          className={`mb-2 rounded-sm border border-gray-300 p-2 ${
             isDragDisabled
               ? 'bg-gray-300'
               : snapshot.isDragging

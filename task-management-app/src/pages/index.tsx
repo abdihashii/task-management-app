@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import { initialData } from '../data/initial-data';
 import { useState } from 'react';
 import Column from '@/components/column';
-import { DragDropContext } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import type { DropResult } from 'react-beautiful-dnd';
 
 const inter = Inter({ subsets: ['latin'] });
@@ -41,7 +41,8 @@ export default function Home() {
       homeIndex: null,
     });
 
-    const { destination, source, draggableId } = result;
+    // getting type to know if we're dragging a task or a column
+    const { destination, source, draggableId, type } = result;
 
     // If there's no destination, then there's nothing we need to do
     if (!destination) return;
@@ -51,6 +52,27 @@ export default function Home() {
       destination.droppableId === source.droppableId &&
       destination.index === source.index
     ) {
+      return;
+    }
+
+    if (type === 'COLUMN') {
+      // create a copy of the column order array
+      const newColumnOrder = [...data.columnOrder];
+
+      // remove the column from the source index
+      newColumnOrder.splice(source.index, 1);
+
+      // insert the column at the destination index
+      newColumnOrder.splice(destination.index, 0, draggableId);
+
+      // create a new state object with the updated column order array
+      const newState = {
+        ...data,
+        columnOrder: newColumnOrder,
+      };
+
+      // update the state
+      setData(newState);
       return;
     }
 
@@ -148,25 +170,38 @@ export default function Home() {
           onDragEnd={onDragEnd}
         >
           {/* Container */}
-          <section
-          // className="grid grid-cols-3"
+          <Droppable
+            droppableId={'droppable-container'}
+            direction="horizontal"
+            type="COLUMN"
           >
-            {data.columnOrder.map((columnId, index) => {
-              const column = data.columns[columnId];
-              const tasks = column.taskIds.map((taskId) => data.tasks[taskId]);
+            {(provided) => (
+              <section
+                className="grid grid-cols-3"
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {data.columnOrder.map((columnId, index) => {
+                  const column = data.columns[columnId];
+                  const tasks = column.taskIds.map(
+                    (taskId) => data.tasks[taskId],
+                  );
 
-              // true when the index of the column is less than the index of the column that the task is being dragged from
-              // this will prevent dragging tasks backgrounds between columns
-              const isDropDisabled = index < data.homeIndex!;
+                  // true when the index of the column is less than the index of the column that the task is being dragged from
+                  // this will prevent dragging tasks backgrounds between columns
+                  const isDropDisabled = index < data.homeIndex!;
 
-              return (
-                <Column
-                  key={column.id}
-                  {...{ index, column, tasks, isDropDisabled }}
-                />
-              );
-            })}
-          </section>
+                  return (
+                    <Column
+                      key={column.id}
+                      {...{ index, column, tasks, isDropDisabled }}
+                    />
+                  );
+                })}
+                {provided.placeholder}
+              </section>
+            )}
+          </Droppable>
         </DragDropContext>
       </main>
     </>
@@ -196,6 +231,38 @@ onDragUpdate = {
 onDragEnd = {
   ...onDragUpdate,
   reason: 'DROP' | 'CANCEL'
+}
+
+*/
+
+/*
+
+How all horizontal and vertical dnd will work
+
+DroppableContainer (Horizontal) {
+  DraggableColumns [
+    DraggableColumn1 {
+      DroppableColumn1 (Vertical) {
+        DraggableTasks [
+          task1,
+          task2,
+          task3
+        ]
+      }
+    },
+
+    DraggableColumn2 {
+      DroppableColumn2 (Vertical) {
+        DraggableTasks []
+      }
+    },
+
+    DraggableColumn3 {
+      DroppableColumn3 (Vertical) {
+        DraggableTasks []
+      }
+    },
+  ]
 }
 
 */
