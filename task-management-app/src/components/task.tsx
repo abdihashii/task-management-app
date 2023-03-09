@@ -4,18 +4,29 @@ import { Draggable } from 'react-beautiful-dnd';
 // import Handle from '@/components/handle';
 
 const Task = ({ task, index }: TaskProps) => {
+  const isDragDisabled = task.id === 'task-1';
+
   return (
-    <Draggable draggableId={task.id} index={index}>
+    <Draggable
+      draggableId={task.id}
+      isDragDisabled={isDragDisabled} // controls what is able to be dragged
+      index={index}
+    >
       {(provided, snapshot) => (
         <div
           className={`mb-2 flex rounded-sm border border-gray-300 p-2 ${
-            snapshot.isDragging ? 'bg-orange-400' : 'bg-white'
+            isDragDisabled
+              ? 'bg-gray-300'
+              : snapshot.isDragging
+              ? 'bg-orange-400'
+              : 'bg-white'
           }`}
           {...provided.draggableProps}
           // the part of the draggable that is used to control the dragging of the entire draggable
           {...provided.dragHandleProps}
           ref={provided.innerRef}
           data-is-dragging={snapshot.isDragging} // using data-is-dragging because isDragging is not a supported attribute for HTMLElements
+          data-is-drag-disabled={isDragDisabled} // can also apply isDragDisabled to the draggable component
         >
           {/* <Handle
             // Makes the handle the only part of the draggable that is used to control the dragging of the entire draggable
