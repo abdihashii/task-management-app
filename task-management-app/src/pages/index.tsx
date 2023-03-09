@@ -50,29 +50,67 @@ export default function Home() {
     }
 
     // Retrieve the column that the task is being dragged from
-    const column = data.columns[source.droppableId];
+    const sourceColumn = data.columns[source.droppableId];
+    const destinationColumn = data.columns[destination.droppableId];
 
-    // Create a copy of the taskIds array from the source column to avoid mutating the state
-    const newTaskIds = [...column.taskIds];
+    if (sourceColumn === destinationColumn) {
+      // Create a copy of the taskIds array from the source column to avoid mutating the state
+      const newSourceColumnTaskIds = [...sourceColumn.taskIds];
 
-    // Modify the array to remove the task from the source index
-    newTaskIds.splice(source.index, 1);
+      // Modify the array to remove the task from the source index
+      newSourceColumnTaskIds.splice(source.index, 1);
 
-    // Modify the array to insert the task at the destination index and insert the task id (draggableId)
-    newTaskIds.splice(destination.index, 0, draggableId);
+      // Modify the array to insert the task at the destination index and insert the task id (draggableId)
+      newSourceColumnTaskIds.splice(destination.index, 0, draggableId);
 
-    // Create a new column object with the updated taskIds array to avoid mutating the state
-    const newColumn = {
-      ...column,
-      taskIds: newTaskIds,
+      // Create a new column object with the updated taskIds array to avoid mutating the state
+      const newSourceColumn = {
+        ...sourceColumn,
+        taskIds: newSourceColumnTaskIds,
+      };
+
+      // Update the state with the new column object to avoid mutating the state
+      const newData = {
+        ...data,
+        columns: {
+          ...data.columns,
+          [newSourceColumn.id]: newSourceColumn,
+        },
+      };
+
+      setData(newData);
+      return; // this is needed otherwise we'll go to the code below
+    }
+
+    /*** Moving from one list to another ***/
+    // We need to make a copy of the source column's tasks
+    const newSourceColumnTaskIds = [...sourceColumn.taskIds];
+
+    // Then we remove that task from the source column's task id array
+    newSourceColumnTaskIds.splice(source.index, 1);
+
+    // Now we create a new column object for the source column
+    const newSourceColumn = {
+      ...sourceColumn,
+      taskIds: newSourceColumnTaskIds,
     };
 
-    // Update the state with the new column object to avoid mutating the state
+    // Do the same thing for the destination column
+    const newDestinationColumnTaskIds = [...destinationColumn.taskIds];
+    // Insert the draggable id at the destination index
+    newDestinationColumnTaskIds.splice(destination.index, 0, draggableId);
+    const newDestinationColumn = {
+      ...destinationColumn,
+      taskIds: newDestinationColumnTaskIds,
+    };
+
+    // Create a new object for the data
     const newData = {
       ...data,
       columns: {
         ...data.columns,
-        [newColumn.id]: newColumn,
+        [newSourceColumn.id]: newSourceColumn,
+        [newDestinationColumn.id]: newDestinationColumn,
       },
     };
 
